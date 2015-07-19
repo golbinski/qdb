@@ -18,7 +18,8 @@ add_compile_options(-std=c++11)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(QDB_SOURCES
-    qdb/trace.cc)
+    qdb/trace.cc
+    qdb/print_log.cc)
 
 add_library(qdb ${QDB_SOURCES})
 
@@ -26,9 +27,15 @@ add_gtest(${CMAKE_CURRENT_BINARY_DIR}/gtest)
 include_directories(${GTEST_INCLUDE_DIRS})
 link_directories(${GTEST_LIBRARY_DIRS})
 
+# testing
+
+add_definitions(
+    -DQDB_TRACE_ENABLED
+    -DQDB_PRINT_LOG_HANDLER)
+
 set(QDB_TESTS_SOURCES
     qdb/trace_tests.cc)
-add_executable(qdb_tests ${QDB_TESTS_SOURCES})
+add_executable(qdb_tests ${QDB_SOURCES} ${QDB_TESTS_SOURCES})
 target_link_libraries(qdb_tests
     gtest_main
     gtest

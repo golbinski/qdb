@@ -2,9 +2,6 @@
  * QDB
  */
 
-#if !defined(QDB_LOG_HANDLER)
-#include <iostream>
-#endif  // !defined(QDB_LOG_HANDLER)
 #include <boost/format.hpp>
 #include "qdb/trace.h"
 
@@ -13,7 +10,7 @@ namespace qdb
 namespace
 {
 
-std::string ExtractFileName(const std::string& filename)
+std::string extract_filename(const std::string& filename)
 {
     const std::size_t pos = filename.find_last_of('/');
     if ( pos != std::string::npos )
@@ -26,31 +23,24 @@ std::string ExtractFileName(const std::string& filename)
     }
 }
 
-#if !defined(QDB_LOG_HANDLER)
-void log_message(const std::string& message)
-{
-    std::clog << message << std::endl;
-}
-#endif  // !defined(QDB_LOG_HANDLER)
-
 }  // unnamed namespace
 
 TraceMessage::TraceMessage(const std::string& filename, size_t line)
-: filename_(ExtractFileName(filename))
+: filename_(extract_filename(filename))
 , line_(line)
 , buffer_()
 , stream_(&buffer_)
 {
 }
 
-TraceMessage::~TraceMessage()
+std::string TraceMessage::capture_log_line()
 {
-    log_message(boost::str(boost::format("%s#%lu: %s")
+    const std::string log{ boost::str(boost::format("[trace] %s#%lu: %s")
         % filename_.c_str()
         % line_
-        % buffer_.c_str()));
+        % buffer_.c_str()) };
     buffer_.reset();
+    return log;
 }
-
 
 }  // namespace qdb
