@@ -45,18 +45,14 @@ namespace qdb
 namespace testing
 {
 
-struct TraceShould : ::testing::Test
-{
-    TmpBuffer buffer;
-};  // test fixture TraceShould
-
 bool HasSubstr(const std::string& str, const std::string& substr)
 {
     return str.find(substr) != std::string::npos;
 }
 
-TEST_F(TraceShould, FlushMessageUsingPrintHandler)
+TEST(TraceShould, FlushMessageUsingPrintHandler)
 {
+    TmpBuffer buffer;
     const std::string message{"example message"};
     QDB_TRACE << message;
     ASSERT_PRED2(HasSubstr, buffer.data, message);
