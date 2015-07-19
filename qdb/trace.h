@@ -24,6 +24,10 @@
 namespace qdb
 {
 
+#if defined(QDB_LOG_HANDLER)
+void log_message(const std::string& message);
+#endif  // defined(QDB_LOG_HANDLER)
+
 class TraceMessage
 {
 public:
